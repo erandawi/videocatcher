@@ -1,4 +1,13 @@
-import { defineFlow } from 'genkit';
+
+'use server';
+/**
+ * @fileOverview Mock flows for YouTube video information retrieval and download.
+ *
+ * - getVideoInfoFlow - Retrieves mock video title and available quality options.
+ * - downloadVideoFlow - Simulates downloading a video.
+ */
+
+import { ai } from '@/ai/genkit'; // Changed from 'genkit' to use the configured ai instance
 import { z } from 'zod';
 
 // This is a mock implementation. A real version would use libraries like ytdl-core (for Node.js)
@@ -17,7 +26,7 @@ const YouTubeUrlSchema = z.string().url().refine(
 );
 
 
-export const getVideoInfoFlow = defineFlow(
+export const getVideoInfoFlow = ai.defineFlow( // Changed from defineFlow to ai.defineFlow
   {
     name: 'getVideoInfoFlow',
     inputSchema: z.object({ youtubeUrl: YouTubeUrlSchema }),
@@ -49,7 +58,7 @@ export const getVideoInfoFlow = defineFlow(
   }
 );
 
-export const downloadVideoFlow = defineFlow(
+export const downloadVideoFlow = ai.defineFlow( // Changed from defineFlow to ai.defineFlow
   {
     name: 'downloadVideoFlow',
     inputSchema: z.object({ youtubeUrl: YouTubeUrlSchema, quality: z.string() }),

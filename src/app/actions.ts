@@ -1,5 +1,6 @@
+
 "use server";
-import { runFlow } from '@genkit-ai/next/server';
+// import { runFlow } from '@genkit-ai/next/server'; // Removed problematic import
 import { getVideoInfoFlow, downloadVideoFlow } from '@/ai/flows/videoDownloader';
 import { z } from 'zod';
 
@@ -28,7 +29,8 @@ export async function getVideoInfoAction(formData: FormData): Promise<VideoInfoS
   const url = formData.get('url') as string;
   try {
     UrlSchema.parse(url); // Validate URL first
-    const result = await runFlow(getVideoInfoFlow, { youtubeUrl: url });
+    // const result = await runFlow(getVideoInfoFlow, { youtubeUrl: url }); // Changed to direct call
+    const result = await getVideoInfoFlow({ youtubeUrl: url });
     return { success: true, data: result };
   } catch (error: any) {
     if (error instanceof z.ZodError) {
@@ -52,7 +54,8 @@ export async function downloadVideoAction(formData: FormData): Promise<DownloadS
     if (!quality) {
       return { success: false, error: "Quality must be selected." };
     }
-    const result = await runFlow(downloadVideoFlow, { youtubeUrl: url, quality });
+    // const result = await runFlow(downloadVideoFlow, { youtubeUrl: url, quality }); // Changed to direct call
+    const result = await downloadVideoFlow({ youtubeUrl: url, quality });
     return { success: true, data: result };
   } catch (error: any) {
     if (error instanceof z.ZodError) {
@@ -61,4 +64,3 @@ export async function downloadVideoAction(formData: FormData): Promise<DownloadS
     return { success: false, error: error.message || "Failed to download video." };
   }
 }
-
